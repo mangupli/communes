@@ -1,0 +1,17 @@
+version: '3.9'
+services:
+  communes-db:
+    image: postgres
+    restart: always
+    container_name: communes-db
+    ports:
+      - 5435:5432
+    env_file:
+      - ./.env
+    environment:
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+
+volumes:
+  postgres:
