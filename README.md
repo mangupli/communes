@@ -1,4 +1,4 @@
-I want to build an app for people who value collaboration and horizontal transparent structures, the rough idea is:
+We're building an app for people who value collaboration and horizontal transparent structures, the rough idea is:
 
 Title: CommuneConnect - Unleash Collaboration, Build Together
 
