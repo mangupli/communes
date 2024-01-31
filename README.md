@@ -1,36 +1,29 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+I want to build an app for people who value collaboration and horizontal transparent structures, the rough idea is:
 
-## Getting Started
+Title: CommuneConnect - Unleash Collaboration, Build Together
 
-First, run the development server:
+Short Description:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+CommuneConnect is your go-to app for creating and collaborating on projects with like-minded individuals. Join or form your commune, work on shared passions, and make decisions together. It's where ideas meet action, effortlessly. And you choose the property distribution type among your team-members – role based or equal.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Key Features:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Build Your Commune:
+Form a community with people who share your interests.
+Connect, chat, and build together effortlessly.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+2. Easy Project Collaboration:
+Start projects within your commune with a simple click.
+Invite members seamlessly to contribute their skills.
 
-## Learn More
+3. Transparent Decision-Making:
+Vote on new members and project decisions democratically.
+Choose how project benefits are distributed.
 
-To learn more about Next.js, take a look at the following resources:
+4. Explore Other Communes:
+Apply to work on exciting projects from different communes.
+Expand your network and collaborate across communities.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+5. Propose Ideas to the Crowd:
+Share your ideas with the community before forming a project.
+Communes can choose to accept and work towards implementing your idea.
