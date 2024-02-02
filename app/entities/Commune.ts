@@ -1,5 +1,6 @@
 import { ZodError, z } from 'zod';
 import { EntityValidationError } from '../lib/EntityError';
+import { MemberEntity } from './Member';
 
 type ValidatedFields = 'name' | 'description';
 
@@ -13,17 +14,25 @@ export type CommuneEntityProps = {
   id?: number;
   name: string;
   description: string;
+  members?: MemberEntity[];
 };
 
 export class CommuneEntity {
   private id?: number;
   private name: string;
   private description: string;
+  private members: MemberEntity[];
 
-  private constructor({ id, name, description }: CommuneEntityProps) {
+  private constructor({
+    id,
+    name,
+    description,
+    members,
+  }: CommuneEntityProps) {
     this.id = id;
     this.name = name;
     this.description = description;
+    this.members = members ?? [];
   }
 
   static create(props: CommuneEntityProps) {
@@ -35,6 +44,8 @@ export class CommuneEntity {
         message: 'Description should be at least 6 characters',
       }),
     });
+
+    // TODO: when creating a new commune where better to set the initial member?
 
     try {
       projectSchema.parse(props);

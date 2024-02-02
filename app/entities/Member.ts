@@ -1,28 +1,27 @@
-import { CommuneEntity } from './Commune';
 import { ProjectEntity } from './Project';
 import { RoleEntity } from './Role';
 
+export type MemberEntityProps = {
+  id: number;
+  name: string;
+  bio?: string;
+  roles?: Map<ProjectEntity, RoleEntity>;
+};
 export class MemberEntity {
   private id: number;
   private name: string;
   private bio?: string;
-  private joinedCommunes: CommuneEntity[];
   private roles: Map<ProjectEntity, RoleEntity>;
 
-  constructor({
-    id,
-    name,
-    bio,
-  }: {
-    id: number;
-    name: string;
-    bio?: string;
-  }) {
+  // TODO: do we need the communes data here?
+  // private joinedCommunes: CommuneEntity[];
+
+  constructor({ id, name, bio, roles }: MemberEntityProps) {
     this.id = id;
     this.name = name;
     this.bio = bio;
-    this.joinedCommunes = [];
-    this.roles = new Map();
+    this.roles = roles ?? new Map();
+    // this.joinedCommunes = [];
   }
 
   getId() {
@@ -36,7 +35,7 @@ export class MemberEntity {
   getBio() {
     return this.bio;
   }
-
+  /* 
   joinCommune(commune: CommuneEntity): void {
     this.joinedCommunes.push(commune);
     commune.addMember(this);
@@ -53,6 +52,7 @@ export class MemberEntity {
   getJoinedCommunes(): CommuneEntity[] {
     return this.joinedCommunes;
   }
+    */
 
   assignRole(project: ProjectEntity, role: RoleEntity): void {
     this.roles.set(project, role);
@@ -67,10 +67,10 @@ export class MemberEntity {
   }
 
   // Check if the member can edit title and description in a specific project
-  canEdit(project: ProjectEntity): boolean {
+  hasRightsToEdit(project: ProjectEntity): boolean {
     if (this.roles.has(project)) {
       const role = this.roles.get(project);
-      return role!.canEdit;
+      return role!.hasRightsToEdit();
     }
     return false;
   }

@@ -63,6 +63,8 @@ export class ProjectEntity {
       });
     }
 
+    // TODO: when creating a new project where better to set the initial member?
+
     return new ProjectEntity(props);
   }
 
