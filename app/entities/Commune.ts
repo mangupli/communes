@@ -1,82 +1,74 @@
-import { MemberEntity } from './Member';
-import { ProjectEntity } from './Project';
+import { ZodError, z } from 'zod';
+import { EntityValidationError } from '../lib/EntityError';
+
+type ValidatedFields = 'name' | 'description';
+
+export class CommuneValidationError extends EntityValidationError<ValidatedFields> {
+  constructor(errors: Record<ValidatedFields, string | undefined>) {
+    super('commune entity', errors);
+  }
+}
+
+export type CommuneEntityProps = {
+  id?: number;
+  name: string;
+  description: string;
+};
 
 export class CommuneEntity {
-  private _id: number;
-  private _name: string;
-  private _description: string;
-  private members: MemberEntity[];
-  private projects: ProjectEntity[];
+  private id?: number;
+  private name: string;
+  private description: string;
 
-  constructor({
-    id,
-    name,
-    description,
-    creator,
-  }: {
-    id: number;
-    name: string;
-    description: string;
-    creator: MemberEntity;
-  }) {
-    this._id = id;
-    this._name = name;
-    this._description = description;
-    this.members = [creator];
-    this.projects = [];
+  private constructor({ id, name, description }: CommuneEntityProps) {
+    this.id = id;
+    this.name = name;
+    this.description = description;
   }
 
-  get id() {
-    return this._id;
-  }
+  static create(props: CommuneEntityProps) {
+    const projectSchema = z.object({
+      name: z
+        .string()
+        .min(1, { message: 'Commune must have a name' }),
+      description: z.string().min(6, {
+        message: 'Description should be at least 6 characters',
+      }),
+    });
 
-  get name() {
-    return this._name;
-  }
+    try {
+      projectSchema.parse(props);
+    } catch (err) {
+      const error = err as ZodError;
+      const errors = error.flatten().fieldErrors;
+      console.log(errors);
 
-  get description() {
-    return this._description;
-  }
-
-  addMember(member: MemberEntity): void {
-    // TODO: how to find among existing members better
-    const foundMember = this.members.find(
-      (m) => member.getId() === m.getId()
-    );
-    // const index = this.members.indexOf(member);
-    if (!foundMember) {
-      this.members.push(member);
+      throw new CommuneValidationError({
+        name: errors.title?.[0],
+        description: errors.description?.[0],
+      });
     }
+
+    return new CommuneEntity(props);
   }
 
-  removeMember(member: MemberEntity): void {
-    // TODO: how to find among existing members better
-    const index = this.members.findIndex(
-      (m) => member.getId() === m.getId()
-    );
-    // const index = this.members.indexOf(member);
-    if (index !== -1) {
-      this.members.splice(index, 1);
-    }
+  getId() {
+    return this.id;
   }
 
-  getMembers(): MemberEntity[] {
-    return this.members;
+  getName() {
+    return this.name;
   }
 
-  addProject(project: ProjectEntity): void {
-    this.projects.push(project);
+  setName(value: string) {
+    this.name = value;
   }
 
-  removeProject(project: ProjectEntity): void {
-    // const index = this.projects.indexOf(project);
-    const index = this.projects.findIndex((p) => p.id === project.id);
-    if (index !== -1) {
-      this.projects.splice(index, 1);
-    }
+  getDescription() {
+    return this.description;
   }
 
-  getProjects(): ProjectEntity[] {
-    return this.projects;
+  setDescription(value: string) {
+    this.description = value;
   }
 }

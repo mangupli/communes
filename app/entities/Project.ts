@@ -1,49 +1,93 @@
+import { ZodError, z } from 'zod';
 import { MemberEntity } from './Member';
 import { RoleEntity } from './Role';
+import { EntityValidationError } from '../lib/EntityError';
+
+type ValidatedFields = 'title' | 'description';
+
+export class ProjectValidationError extends EntityValidationError<ValidatedFields> {
+  constructor(errors: Record<ValidatedFields, string | undefined>) {
+    super('project entity', errors);
+  }
+}
+
+export type ProjectEntityProps = {
+  id?: number;
+  title: string;
+  description: string;
+  roles?: RoleEntity[];
+  members?: Map<MemberEntity, RoleEntity>;
+};
 
 export class ProjectEntity {
-  private _id: number;
-  private _title: string;
-  private _description: string;
+  private id?: number;
+  private title: string;
+  private description: string;
   private roles: RoleEntity[];
   private members: Map<MemberEntity, RoleEntity>;
 
-  constructor({
+  private constructor({
     id,
     title,
     description,
-    initiator,
-  }: {
-    id: number;
-    title: string;
-    description: string;
-    initiator: MemberEntity;
-  }) {
-    this._id = id;
-    this._title = title;
-    this._description = description;
-    this.roles = [];
-    this.members = new Map();
+    roles,
+    members,
+  }: ProjectEntityProps) {
+    this.id = id;
+    this.title = title;
+    this.description = description;
+    this.roles = roles ?? [];
+    this.members = members ?? new Map();
+  }
 
-    const initiatorRole = new RoleEntity({
-      name: 'Initiator',
-      description: 'Project initiator with full rights',
-      canEdit: true,
+  static create(props: ProjectEntityProps) {
+    const projectSchema = z.object({
+      title: z
+        .string()
+        .min(1, { message: 'Project title is required' }),
+      description: z.string().min(6, {
+        message: 'Description should be at least 6 characters',
+      }),
     });
-    this.addRole(initiatorRole);
-    this.assignRole(initiator, initiatorRole);
+
+    try {
+      projectSchema.parse(props);
+    } catch (err) {
+      const error = err as ZodError;
+      const errors = error.flatten().fieldErrors;
+      console.log(errors);
+
+      throw new ProjectValidationError({
+        title: errors.title?.[0],
+        description: errors.description?.[0],
+      });
+    }
+
+    return new ProjectEntity(props);
   }
 
-  get id() {
-    return this._id;
+  getId() {
+    return this.id;
   }
 
-  get title() {
-    return this._title;
+  getName() {
+    return this.title;
   }
 
-  get description() {
-    return this._description;
+  setName(value: string) {
+    this.title = value;
+  }
+
+  getDescription() {
+    return this.description;
+  }
+
+  setDescription(value: string) {
+    this.description = value;
+  }
+
+  getRoles(): RoleEntity[] {
+    return this.roles;
   }
 
   addRole(role: RoleEntity): void {
@@ -55,10 +99,6 @@ export class ProjectEntity {
     if (index !== -1) {
       this.roles.splice(index, 1);
     }
-  }
-
-  getRoles(): RoleEntity[] {
-    return this.roles;
   }
 
   assignRole(member: MemberEntity, role: RoleEntity): void {

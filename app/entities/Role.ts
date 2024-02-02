@@ -1,31 +1,37 @@
-export class RoleEntity {
-  private _name: string;
-  private _description?: string;
-  private _canEdit: boolean;
+export type RoleEntityProps = {
+  name: string;
+  description?: string;
+  canEdit: boolean;
+};
 
-  constructor({
+export class RoleEntity {
+  private name: string;
+  private description?: string;
+  private canEdit: boolean;
+
+  private constructor({
     name,
     description,
-    canEdit = false,
-  }: {
-    name: string;
-    description?: string;
-    canEdit: boolean;
-  }) {
-    this._name = name;
-    this._description = description;
-    this._canEdit = canEdit;
+    canEdit = true,
+  }: RoleEntityProps) {
+    this.name = name;
+    this.description = description;
+    this.canEdit = canEdit;
   }
 
-  get canEdit() {
-    return this._canEdit;
+  hasRightsToEdit() {
+    return this.canEdit;
   }
 
-  get name() {
-    return this._name;
+  getName() {
+    return this.name;
   }
 
-  get description() {
-    return this._description;
+  getDescription() {
+    return this.description;
+  }
+
+  static create(props: RoleEntityProps) {
+    return new RoleEntity(props);
   }
 }
